@@ -16,7 +16,7 @@ class ChatServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__ . '/Views' => base_path('resources/views/frameworkteam/chat'),
-            __DIR__ . '/Controller' => base_path('app/Http/Controllers'),
+            __DIR__ . '/Controllers' => base_path('app/Http/Controllers'),
             __DIR__ . '/js'         => base_path('public/js'),
             __DIR__ . '/config'     => base_path('config'),
             ]);
