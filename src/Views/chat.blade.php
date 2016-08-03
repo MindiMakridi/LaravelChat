@@ -7,6 +7,6 @@
 </head>
 <body>
 	 <div class="panel-body" id="container_chat" data-chat="{{$chat_id}}" data-user="{{$user->id}}" data-last="{{$last_id or 0}}">
-	 <script type="text/babel" src="/chat.js"></script>
+	 <script type="text/babel" src="/js/chat.js"></script>
 </body>
 </html

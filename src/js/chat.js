@@ -179,7 +179,6 @@
                             return (
                                 <div key={msg.id} className="b-message__item clearfix col-md-12">
                                     <div className="chat-name">{msg.from.first_name}</div>
-                                    <a href="#"><img src="/images/user-1.png" alt="" title="" className="img-circle pull-left img-user" /></a>
                                     <a href="#" className="user-name text-primary col-md-8">{msg.name_sender}</a>
                                     <div className="col-md-9 pull-left margin-top-10">
                                         {msg.text}
