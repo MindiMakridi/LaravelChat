@@ -1,6 +1,6 @@
 {
     "name": "frameworkteam/chat",
-    "version": "0.1",
+    "version": "0.0.1",
     "description": "Simple chat for laravel applications",
     "license": "MIT",
     "authors": [
@@ -19,5 +19,5 @@
             "Frameworkteam\\Chat\\": "src/"
         }
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "stable"
 }
