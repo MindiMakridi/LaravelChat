@@ -19,6 +19,7 @@ class ChatServiceProvider extends ServiceProvider
             __DIR__ . '/Controllers' => base_path('app/Http/Controllers'),
             __DIR__ . '/js'         => base_path('public/js'),
             __DIR__ . '/config'     => base_path('config'),
+            __DIR__ . '/database/migrations' => base_path('database/migrations')
             ]);
     }
 

@@ -21,8 +21,8 @@ class ChatController extends Controller {
 
        abort_if((!$user || !$secondUser || $user->id == $secondUser->id), '404');
 
-       $chatId = Chat::getHashOrCreateChat($user->id, $userId);
-       $lastId = Chat::getLastMessageId();
+       $chatId = ChatHelper::getHashOrCreateChat($user->id, $userId);
+       $lastId = ChatHelper::getLastMessageId();
 
         return view('frameworkteam.chat.chat', [
             'user' => $user,
