@@ -1,0 +1,56 @@
+Message:
+    type: entity
+    table: im__message
+    indexes:
+        from_id:
+            columns:
+                - from_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+
+    manyToOne:
+        user:
+            targetEntity: User
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                from_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+
+    fields:
+        chat_id:
+            type: string
+            nullable: false
+            column: chat_id
+        text:
+            type: string
+            nullable: false
+            column: text
+        is_read:
+            type: boolean
+            nullable: false
+            column: is_read
+            options:
+                default: 0
+        createdAt:
+            type: datetime
+            nullable: true
+            column: created_at
+        updatedAt:
+            type: datetime
+            nullable: true
+            column: updated_at
+        deletedAt:
+            type: datetime
+            nullable: true
+            column: deleted_at
