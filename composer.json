@@ -15,7 +15,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Frameworkteam\\Chat\\": "src/",
+            "Frameworkteam\\Chat\\": "src/"
         }
     }
 }
