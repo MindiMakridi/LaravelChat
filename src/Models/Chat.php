@@ -54,22 +54,32 @@ class Chat extends Model
         $chats = Chat::where('user_id', '=', Auth::id())->get();
         $result = array();
         foreach($chats as $chat){
-            $users = self::getUsers($chat->chat_id);
+            $users = self::getUsers($chat->chat_id, true);
             unset($users[Auth::id()]);
             $chat->new_messages_count = self::countNewMessages($chat->chat_id);
+            $chat->all_messages_count = self::countAllMessages($chat->chat_id);
             $result[] = (object)array('users'=>$users, 'data'=>$chat);
         }
         return $result;
     }
 
     public static function countNewMessages($chat){
-        return Message::where('chat_id','=', $chat)->where('is_read', '=', '0')->count();
+        return Message::where('chat_id','=', $chat)->where('is_read', '=', '0')->where('from_id', '<>', Auth::id())->count();
     }
 
-    public static function getUsers($chat){
+    public static function countAllMessages($chat){
+        return Message::where('chat_id','=', $chat)->count();
+    }
+
+    public static function getUsers($chat, $exclude = false){
         $user = array();
-        foreach( Chat::where('chat_id','=',$chat)->get() as $chat_line){
-            $user[$chat_line->user_id] = User::find($chat_line->user_id);
+        $userModel = config('Chat')['User'];
+        $chats = Chat::where('chat_id','=',$chat);
+        if ($exclude) {
+            $chats->where('user_id', '<>', Auth::id());
+        }
+        foreach( $chats->get() as $chat_line){
+            $user[] = $userModel::find($chat_line->user_id);
         }
         return $user;
     }

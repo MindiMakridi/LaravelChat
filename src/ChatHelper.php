@@ -28,4 +28,9 @@ class ChatHelper
     {
     	return Message::all()->max('id');
     }
+
+    public static function getAllChats()
+    {
+        return Chat::allChats();
+    }
 }
