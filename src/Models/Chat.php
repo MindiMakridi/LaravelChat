@@ -50,9 +50,22 @@ class Chat extends Model
         return $hash;
     }
 
-    public static function allChats(){
-        $chats = Chat::where('user_id', '=', Auth::id())->get();
+    public static function allChats($filter = 'all'){
+        $chats = Chat::where('user_id', '=', Auth::id())->where('is_ignoring', '=', 0);
+        if ($filter == 'all') {
+            $chats = $chats->get();
+        } elseif ($filter == 'new') {
+            $chats = $chats->whereHas('message', function ($query) {
+                $query->where('is_read', '=', 0)->where('from_id', '<>', Auth::id());
+            })->get();
+        } elseif ($filter == 'ignored') {
+            $chats = Chat::where('user_id', '=', Auth::id())->where('is_ignoring', '=', '1')->get();
+        } else {
+            abort('404');
+        }
+
         $result = array();
+
         foreach($chats as $chat){
             $users = self::getUsers($chat->chat_id, true);
             unset($users[Auth::id()]);
@@ -60,6 +73,7 @@ class Chat extends Model
             $chat->all_messages_count = self::countAllMessages($chat->chat_id);
             $result[] = (object)array('users'=>$users, 'data'=>$chat);
         }
+
         return $result;
     }
 

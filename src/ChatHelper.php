@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 
 class ChatHelper
 {
+
 	public static function getHashOrCreateChat($userId, $secondUserId)
     {
         $chat_hash = Chat::getByUser($userId, $secondUserId);
@@ -29,8 +30,13 @@ class ChatHelper
     	return Message::all()->max('id');
     }
 
-    public static function getAllChats()
+    public static function getAllChats($filter = 'all')
     {
-        return Chat::allChats();
+        return Chat::allChats($filter);
+    }
+
+    public static function getChatModel()
+    {
+        return new Chat;
     }
 }

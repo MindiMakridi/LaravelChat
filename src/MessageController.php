@@ -12,25 +12,10 @@ use Input;
 use App\Model\User\User;
 use Frameworkteam\Chat\Models\Message;
 use Frameworkteam\Chat\Models\Chat;
+use ChatHelper;
 
 class MessageController extends Controller
 {
-	public function getHashOrCreateChat()
-    {
-        $id_current = Auth::id();
-        $id_second = Input::get('id');
-        $chat_hash = Chat::getByUser($id_current, $id_second);
-        if ($chat_hash) {
-            $count_user = Chat::countParticipant($chat_hash);
-        } else {
-            $count_user = 0;
-        }
-        if ($count_user > 2 or $count_user == 0) {
-            $chat_hash = Chat::create_($id_current, $id_second);
-        }
-
-        return $chat_hash;
-    }
 
     public function getJson()
     {
@@ -89,6 +74,21 @@ class MessageController extends Controller
                 $chat->setUpdatedAt($chat->freshTimestamp());
                 $chat->save();
             }
+        }
+        elseif ($request->user_id && $request->text)
+        {
+            $chat_id = ChatHelper::getHashOrCreateChat(Auth::id(), $request->user_id);
+
+            $message = Message::send($chat_id, Auth::id(), $request->text);
+            if ($message) {
+                $chat = Chat::where('chat_id', $chat_id)->get()->first();
+                $chat->setUpdatedAt($chat->freshTimestamp());
+                $chat->save();
+            }  
+        }
+
+        if ($request->redirect) {
+            return redirect($request->redirect);
         }
 
         return response()->json($message);

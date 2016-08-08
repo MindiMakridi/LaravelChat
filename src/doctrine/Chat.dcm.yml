@@ -32,6 +32,12 @@ Chat:
             type: string
             nullable: false
             column: chat_id
+        is_ignoring:
+            type: boolean
+            nullable: false
+            column: is_ignored
+            options:
+                default: 0
         createdAt:
             type: datetime
             nullable: true
