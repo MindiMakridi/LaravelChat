@@ -30,9 +30,9 @@ class ChatHelper
     	return Message::all()->max('id');
     }
 
-    public static function getAllChats($filter = 'all')
+    public static function getAllChats($filter = 'all', $perPage = 0)
     {
-        return Chat::allChats($filter);
+        return Chat::allChats($filter, $perPage);
     }
 
     public static function getChatModel()

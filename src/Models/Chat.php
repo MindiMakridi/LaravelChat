@@ -16,6 +16,8 @@ class Chat extends Model
         'user_id',
         'chat_id'
     ];
+    
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
     public function user()
     {
@@ -50,18 +52,24 @@ class Chat extends Model
         return $hash;
     }
 
-    public static function allChats($filter = 'all'){
+    public static function allChats($filter = 'all', $perPage = 0){
         $chats = Chat::where('user_id', '=', Auth::id())->where('is_ignoring', '=', 0);
         if ($filter == 'all') {
-            $chats = $chats->get();
+            $chats = $chats;
         } elseif ($filter == 'new') {
             $chats = $chats->whereHas('message', function ($query) {
                 $query->where('is_read', '=', 0)->where('from_id', '<>', Auth::id());
-            })->get();
+            });
         } elseif ($filter == 'ignored') {
-            $chats = Chat::where('user_id', '=', Auth::id())->where('is_ignoring', '=', '1')->get();
+            $chats = Chat::where('user_id', '=', Auth::id())->where('is_ignoring', '=', '1');
         } else {
             abort('404');
+        }
+        
+        if ($perPage) {
+            $chats = $chats->paginate($perPage);
+        } else {
+            $chats = $chats->get();
         }
 
         $result = array();
@@ -71,10 +79,11 @@ class Chat extends Model
             unset($users[Auth::id()]);
             $chat->new_messages_count = self::countNewMessages($chat->chat_id);
             $chat->all_messages_count = self::countAllMessages($chat->chat_id);
+            $chat->users = $users;
             $result[] = (object)array('users'=>$users, 'data'=>$chat);
         }
 
-        return $result;
+        return $chats;
     }
 
     public static function countNewMessages($chat){
