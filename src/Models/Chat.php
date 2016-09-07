@@ -74,15 +74,18 @@ class Chat extends Model
 
         $result = array();
 
-        foreach($chats as $chat){
+        foreach($chats as $key => $chat){
             $users = self::getUsers($chat->chat_id, true);
             unset($users[Auth::id()]);
+            if(!$users[0]) {
+                unset($chats[$key]);
+                continue;
+            }
             $chat->new_messages_count = self::countNewMessages($chat->chat_id);
             $chat->all_messages_count = self::countAllMessages($chat->chat_id);
             $chat->users = $users;
             $result[] = (object)array('users'=>$users, 'data'=>$chat);
         }
-
         return $chats;
     }
 
