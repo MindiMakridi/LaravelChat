@@ -11,7 +11,7 @@ class Message extends Model
 
     public function from()
     {
-        return $this->hasOne('App\Model\User\User', 'id', 'from_id');
+        return $this->hasOne('App\Model\User\User', 'id', 'from_id')->select('id', 'first_name', 'last_name', 'patronymic');
     }
 
     public static function getByID($chat)
