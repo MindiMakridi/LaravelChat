@@ -155,4 +155,16 @@ class MessageController extends Controller
             ->with('userIds', $userIds)
             ->with('filter', $filter);
     }
+
+    public function getHashJson($secondUserId)
+    {
+        $chat_id = ChatHelper::getHash(Auth::id(), $secondUserId);
+
+        return $chat_id ? response()->json(['success' => true, 'chat_id' => $chat_id]) : response()->json(['error' => true]);
+    }
+
+    public function getUserAvatar($id)
+    {
+        return response()->json(['avatar' => User::findorFail($id)->avatarSrc('50x50')]);
+    }
 }
