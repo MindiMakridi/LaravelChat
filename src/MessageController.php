@@ -10,6 +10,7 @@ use Auth;
 use Input;
 
 use App\Model\User\User;
+use App\Events\NewChatMessage;
 use Frameworkteam\Chat\Models\Message;
 use Frameworkteam\Chat\Models\Chat;
 use ChatHelper;
@@ -70,9 +71,13 @@ class MessageController extends Controller
             $message = Message::send($request->chat, Auth::id(), $request->text);
 
             if ($message) {
-                $chat = Chat::where('chat_id', $request->chat)->get()->first();
+                $chat = Chat::where('chat_id', $request->chat)->where('user_id', '<>', Auth::id())->get()->first();
                 $chat->setUpdatedAt($chat->freshTimestamp());
                 $chat->save();
+
+                if (!$chat->is_ignoring) {
+                    event(new NewChatMessage($chat->user));
+                }
             }
         }
         elseif ($request->user_id && $request->text)
@@ -81,9 +86,13 @@ class MessageController extends Controller
 
             $message = Message::send($chat_id, Auth::id(), $request->text);
             if ($message) {
-                $chat = Chat::where('chat_id', $chat_id)->get()->first();
+                $chat = Chat::where('chat_id', $chat_id)->where('user_id', '<>', Auth::id())->get()->first();
                 $chat->setUpdatedAt($chat->freshTimestamp());
                 $chat->save();
+
+                if (!$chat->is_ignoring) {
+                    event(new NewChatMessage($chat->user));
+                }
             }  
         }
 
@@ -154,5 +163,17 @@ class MessageController extends Controller
             ->with('users', $users)
             ->with('userIds', $userIds)
             ->with('filter', $filter);
+    }
+
+    public function getHashJson($secondUserId)
+    {
+        $chat_id = ChatHelper::getHash(Auth::id(), $secondUserId);
+
+        return $chat_id ? response()->json(['success' => true, 'chat_id' => $chat_id]) : response()->json(['error' => true]);
+    }
+
+    public function getUserAvatar($id)
+    {
+        return response()->json(['avatar' => User::findorFail($id)->avatarSrc('50x50')]);
     }
 }
