@@ -75,7 +75,7 @@ class MessageController extends Controller
                 $chat->setUpdatedAt($chat->freshTimestamp());
                 $chat->save();
 
-                if (!$chat->is_ignoring) {
+                if (!$chat->is_ignoring && $chat->user->setting->notificate_im) {
                     event(new NewChatMessage($chat->user));
                 }
             }
@@ -90,7 +90,7 @@ class MessageController extends Controller
                 $chat->setUpdatedAt($chat->freshTimestamp());
                 $chat->save();
 
-                if (!$chat->is_ignoring) {
+                if (!$chat->is_ignoring && $chat->user->setting->notificate_im) {
                     event(new NewChatMessage($chat->user));
                 }
             }  
