@@ -25,6 +25,13 @@ class ChatHelper
         return $chat_hash;
     }
 
+    public static function getHash($userId, $secondUserId)
+    {
+        $chat_hash = Chat::getByUser($userId, $secondUserId);
+
+        return $chat_hash ? $chat_hash : false;
+    }
+
     public static function getLastMessageId()
     {
     	return Message::all()->max('id');
