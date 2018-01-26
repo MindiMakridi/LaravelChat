@@ -65,6 +65,8 @@ class Chat extends Model
         } else {
             abort('404');
         }
+
+        $chats->orderBy('updated_at', 'desc');
         
         if ($perPage) {
             $chats = $chats->paginate($perPage);
